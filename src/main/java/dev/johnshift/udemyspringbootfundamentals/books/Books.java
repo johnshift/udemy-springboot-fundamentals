@@ -1,4 +1,4 @@
-package dev.johnshift.udemyspringbootfundamentals.controllers;
+package dev.johnshift.udemyspringbootfundamentals.books;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -6,7 +6,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "books") // map class to table_name
+@Table(name = "books")
 public class Books {
 
   @Column(name = "book_name")

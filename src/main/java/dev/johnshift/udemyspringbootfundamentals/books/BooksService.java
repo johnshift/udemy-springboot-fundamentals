@@ -1,12 +1,9 @@
-package dev.johnshift.udemyspringbootfundamentals.service;
+package dev.johnshift.udemyspringbootfundamentals.books;
 
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import dev.johnshift.udemyspringbootfundamentals.controllers.Books;
-import dev.johnshift.udemyspringbootfundamentals.repository.BooksRepository;
 
 @Service
 public class BooksService {
@@ -19,7 +16,6 @@ public class BooksService {
   }
 
   public boolean bookAlreadyExist(String id) {
-
     Optional<Books> book = repository.findById(id);
 
     if (book.isPresent()) {

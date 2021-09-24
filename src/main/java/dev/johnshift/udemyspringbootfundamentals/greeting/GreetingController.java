@@ -1,4 +1,4 @@
-package dev.johnshift.udemyspringbootfundamentals.controllers;
+package dev.johnshift.udemyspringbootfundamentals.greeting;
 
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class GreetingCtl {
+public class GreetingController {
 
   @Autowired
   Greeting greeting;
@@ -16,7 +16,7 @@ public class GreetingCtl {
   AtomicLong counter = new AtomicLong();
 
   @GetMapping("/greeting")
-  public Greeting greeting(@RequestParam(value = "name") String name) {
+  public Greeting greeting(@RequestParam(value = "name", defaultValue = "World!") String name) {
 
     greeting.setId(counter.incrementAndGet());
     greeting.setMessage("Hello, " + name);

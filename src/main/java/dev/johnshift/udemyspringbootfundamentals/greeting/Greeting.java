@@ -1,4 +1,4 @@
-package dev.johnshift.udemyspringbootfundamentals.controllers;
+package dev.johnshift.udemyspringbootfundamentals.greeting;
 
 import org.springframework.stereotype.Component;
 
