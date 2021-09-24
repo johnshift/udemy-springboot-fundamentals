@@ -10,7 +10,7 @@ import javax.persistence.Table;
 public class Book {
 
   @Column(name = "book_name")
-  private String book_name;
+  private String bookName;
 
   @Id
   @Column(name = "id")
@@ -25,12 +25,12 @@ public class Book {
   @Column(name = "author")
   private String author;
 
-  public String getBook_name() {
-    return this.book_name;
+  public String getBookName() {
+    return this.bookName;
   }
 
-  public void setBook_name(String book_name) {
-    this.book_name = book_name;
+  public void setBookName(String bookName) {
+    this.bookName = bookName;
   }
 
   public String getId() {
