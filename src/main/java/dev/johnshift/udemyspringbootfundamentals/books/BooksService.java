@@ -16,7 +16,7 @@ public class BooksService {
   }
 
   public boolean bookAlreadyExist(String id) {
-    Optional<Books> book = repository.findById(id);
+    Optional<Book> book = repository.findById(id);
 
     if (book.isPresent()) {
       return true;
