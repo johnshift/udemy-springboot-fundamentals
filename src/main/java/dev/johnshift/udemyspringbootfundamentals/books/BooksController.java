@@ -109,6 +109,12 @@ public class BooksController {
     return new ResponseEntity<Object>(HttpStatus.OK);
 
   }
+
+  @GetMapping("/books")
+  public List<Book> getAllBooks() {
+
+    return repository.findAll();
+  }
 }
 
 @Component
