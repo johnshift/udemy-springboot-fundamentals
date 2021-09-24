@@ -7,6 +7,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -37,7 +38,7 @@ public class BooksController {
     String id = booksService.buildId(book.getIsbn(), book.getAisle());
 
     // check if book already exists
-    if (!booksService.bookAlreadyExist(id)) {
+    if (!booksService.bookExists(id)) {
 
       // save to db
       book.setId(id);
@@ -92,6 +93,21 @@ public class BooksController {
     repository.save(retrievedBook);
 
     return new ResponseEntity<Book>(retrievedBook, HttpStatus.OK);
+  }
+
+  @DeleteMapping("/books/{id}")
+  public ResponseEntity<Object> deleteBook(@PathVariable(value = "id") String id) {
+
+    if (!booksService.bookExists(id)) {
+
+      bookErrorResponse.setInfo("book_id '" + id + "' not found");
+      bookErrorResponse.setMessage("Book does not exists");
+      return new ResponseEntity<Object>(bookErrorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    repository.deleteById(id);
+    return new ResponseEntity<Object>(HttpStatus.OK);
+
   }
 }
 
