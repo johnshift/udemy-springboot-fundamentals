@@ -1,10 +1,17 @@
 package dev.johnshift.udemyspringbootfundamentals;
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -85,6 +92,20 @@ class UdemySpringbootFundamentalsApplicationTests {
         .andExpect(status().isCreated()).andExpect(jsonPath("$.id").value(book.getId()))
         .andExpect(jsonPath("$.message").value("Book has been successfully added"));
 
+  }
+
+  @Test
+  public void getBookbyAuthorTest() throws Exception {
+
+    // mock
+    List<Book> books = new ArrayList<Book>();
+    books.add(createBook());
+    books.add(createBook());
+    when(booksRepository.findAllByAuthor(any())).thenReturn(books);
+
+    // mockmvc
+    this.mockMvc.perform(get("/books/author").param("name", "johnshift")).andDo(print()).andExpect(status().isOk())
+        .andExpect(jsonPath("$.length()", is(2))).andExpect(jsonPath("$.[0].id").value("NEW_ISBN999"));
   }
 
   public Book createBook() {
