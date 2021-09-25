@@ -95,7 +95,8 @@ public class BooksController {
   @PutMapping("/books")
   public ResponseEntity<Book> updateBook(@RequestBody Book book) {
 
-    Book retrievedBook = repository.findById(book.getId()).get();
+    // Book retrievedBook = repository.findById(book.getId()).get();
+    Book retrievedBook = booksService.getBookById(book.getId());
 
     retrievedBook.setAuthor(book.getAuthor());
     retrievedBook.setBookName(book.getBookName());

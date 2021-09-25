@@ -24,4 +24,8 @@ public class BooksService {
 
     return false;
   }
+
+  public Book getBookById(String id) {
+    return repository.findById(id).get();
+  }
 }

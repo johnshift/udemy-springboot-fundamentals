@@ -6,13 +6,14 @@ import static org.mockito.Mockito.when;
 import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -37,14 +38,14 @@ import dev.johnshift.udemyspringbootfundamentals.books.ResponseAddBook;
 @AutoConfigureMockMvc
 class UdemySpringbootFundamentalsApplicationTests {
 
-  @Autowired
-  BooksController booksController;
-
   @MockBean
   BooksRepository booksRepository;
 
   @MockBean
   BooksService booksService;
+
+  @Autowired
+  BooksController booksController;
 
   @Autowired
   MockMvc mockMvc;
@@ -108,6 +109,22 @@ class UdemySpringbootFundamentalsApplicationTests {
         .andExpect(jsonPath("$.length()", is(2))).andExpect(jsonPath("$.[0].id").value("NEW_ISBN999"));
   }
 
+  @Test
+  public void updateBookTest() throws Exception {
+
+    // mock
+    Book book = createBook();
+    ObjectMapper map = new ObjectMapper();
+    Book updatedBook = updateBook(book);
+    String jsonPayload = map.writeValueAsString(updatedBook);
+    when(booksService.getBookById(any())).thenReturn(book);
+
+    // mockmvc
+    this.mockMvc.perform(put("/books").contentType(MediaType.APPLICATION_JSON).content(jsonPayload)).andDo(print())
+        .andExpect(status().isOk()).andExpect(content().json(
+            "{\"bookName\":\"Updated Book Name\",\"id\":\"NEW_ISBN999\",\"isbn\":\"NEW_ISBN\",\"aisle\":999,\"author\":\"johnshift2\"}"));
+  }
+
   public Book createBook() {
     Book book = new Book();
 
@@ -116,6 +133,21 @@ class UdemySpringbootFundamentalsApplicationTests {
     book.setIsbn("NEW_ISBN");
     book.setAuthor("johnshift");
     book.setId("NEW_ISBN999");
+
+    return book;
+  }
+
+  public Book updateBook(Book prev) {
+    Book book = new Book();
+
+    // updated fields
+    book.setBookName("Updated Book Name");
+    book.setAuthor("johnshift2");
+
+    // // retained fields
+    // book.setIsbn(prev.getIsbn());
+    // book.setId(prev.getId());
+    // book.setAisle(prev.getAisle());
 
     return book;
   }
