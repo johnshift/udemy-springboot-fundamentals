@@ -2,6 +2,8 @@ package dev.johnshift.udemyspringbootfundamentals.books;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -31,6 +33,8 @@ public class BooksController {
   @Autowired
   BooksService booksService;
 
+  private static final Logger logger = LoggerFactory.getLogger(BooksController.class);
+
   @PostMapping("/books")
   public ResponseEntity<AddBookResponse> addBook(@RequestBody Book book) {
 
@@ -39,6 +43,9 @@ public class BooksController {
 
     // check if book already exists
     if (!booksService.bookExists(id)) {
+
+      // log
+      logger.info("Creating new book", book);
 
       // save to db
       book.setId(id);
@@ -55,6 +62,9 @@ public class BooksController {
       // build http response
       return new ResponseEntity<AddBookResponse>(addBookResponse, headers, HttpStatus.CREATED);
     }
+
+    // log
+    logger.info("Book does not exist.", book);
 
     // handle book already exists
     addBookResponse.setMessage("Book already exists");
