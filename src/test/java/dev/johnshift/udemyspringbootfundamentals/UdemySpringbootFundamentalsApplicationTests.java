@@ -7,10 +7,12 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.mockito.Mockito.doNothing;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -123,6 +125,18 @@ class UdemySpringbootFundamentalsApplicationTests {
     this.mockMvc.perform(put("/books").contentType(MediaType.APPLICATION_JSON).content(jsonPayload)).andDo(print())
         .andExpect(status().isOk()).andExpect(content().json(
             "{\"bookName\":\"Updated Book Name\",\"id\":\"NEW_ISBN999\",\"isbn\":\"NEW_ISBN\",\"aisle\":999,\"author\":\"johnshift2\"}"));
+  }
+
+  @Test
+  public void deleteBookTest() throws Exception {
+
+    // mockito
+    Book book = createBook();
+    when(booksService.bookExists(book.getId())).thenReturn(true);
+    doNothing().when(booksRepository).delete(book);
+
+    // mockmvc
+    this.mockMvc.perform(delete("/books/" + book.getId())).andExpect(status().isOk());
   }
 
   public Book createBook() {
