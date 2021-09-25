@@ -25,7 +25,7 @@ public class BooksController {
   BooksRepository repository;
 
   @Autowired
-  AddBookResponse addBookResponse;
+  ResponseAddBook responseAddBook;
 
   @Autowired
   BookErrorResponse bookErrorResponse;
@@ -36,7 +36,7 @@ public class BooksController {
   private static final Logger logger = LoggerFactory.getLogger(BooksController.class);
 
   @PostMapping("/books")
-  public ResponseEntity<AddBookResponse> addBook(@RequestBody Book book) {
+  public ResponseEntity<ResponseAddBook> addBook(@RequestBody Book book) {
 
     // set id for new book
     String id = booksService.buildId(book.getIsbn(), book.getAisle());
@@ -52,24 +52,24 @@ public class BooksController {
       repository.save(book);
 
       // set json response
-      addBookResponse.setMessage("Book has been successfully added");
-      addBookResponse.setId(id);
+      responseAddBook.setMessage("Book has been successfully added");
+      responseAddBook.setId(id);
 
       // set headers
       HttpHeaders headers = new HttpHeaders();
       headers.add("unique", id);
 
       // build http response
-      return new ResponseEntity<AddBookResponse>(addBookResponse, headers, HttpStatus.CREATED);
+      return new ResponseEntity<ResponseAddBook>(responseAddBook, headers, HttpStatus.CREATED);
     }
 
     // log
     logger.info("Book does not exist.", book);
 
     // handle book already exists
-    addBookResponse.setMessage("Book already exists");
-    addBookResponse.setId(id);
-    return new ResponseEntity<AddBookResponse>(addBookResponse, HttpStatus.ACCEPTED);
+    responseAddBook.setMessage("Book already exists");
+    responseAddBook.setId(id);
+    return new ResponseEntity<ResponseAddBook>(responseAddBook, HttpStatus.ACCEPTED);
 
   }
 
@@ -125,29 +125,6 @@ public class BooksController {
 
     return repository.findAll();
   }
-}
-
-@Component
-class AddBookResponse {
-  public String message;
-  public String id;
-
-  public String getMessage() {
-    return this.message;
-  }
-
-  public void setMessage(String message) {
-    this.message = message;
-  }
-
-  public String getId() {
-    return this.id;
-  }
-
-  public void setId(String id) {
-    this.id = id;
-  }
-
 }
 
 @Component
